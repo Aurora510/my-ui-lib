@@ -1,0 +1,25 @@
+{
+  "name": "@my-ui-kit/theme",
+  "version": "1.0.0",
+  "description": "My UI Kit - 设计令牌与主题",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js",
+      "types": "./esm/index.d.ts"
+    }
+  },
+  "files": ["esm", "cjs"],
+  "scripts": {
+    "build": "father build",
+    "dev": "father dev",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "father": "^4",
+    "typescript": "^5"
+  }
+}

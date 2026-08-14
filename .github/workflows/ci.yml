@@ -1,0 +1,56 @@
+# 持续集成 (CI)：每次 push / PR 自动执行 安装 → Lint → 测试 → 构建
+# 任一步失败即拦截合并，保证 main 上的代码永远是可发布的
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 版本号自动读取 package.json 里的 packageManager 字段 (pnpm@10.27.0)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      # --frozen-lockfile：lockfile 与 package.json 不一致时直接报错，防止依赖漂移
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      # turbo 会并行构建全部子包，父产物 esm/cjs、dumi 的 dist 都会产出
+      - name: Build
+        run: pnpm build
+
+      # PR 必须带 changeset：防止功能合入 main 却忘记记录版本变更
+      # 如确无需发版，可给 PR 打上 skip-changeset 标签豁免
+      - name: Require changeset
+        if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'skip-changeset')
+        run: |
+          COUNT=$(ls .changeset/*.md 2>/dev/null | grep -vE '(README|config)' | wc -l)
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::error::This PR has no changeset. Run 'pnpm changeset' to create one, or add the 'skip-changeset' label to skip."
+            exit 1
+          fi

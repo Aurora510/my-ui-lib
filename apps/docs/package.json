@@ -1,0 +1,21 @@
+{
+  "name": "@my-ui-kit/docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "dumi dev",
+    "build": "dumi build",
+    "preview": "dumi preview"
+  },
+  "devDependencies": {
+    "@my-ui-kit/components": "workspace:*",
+    "@my-ui-kit/theme": "workspace:*",
+    "@my-ui-kit/utils": "workspace:*",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "dumi": "^2",
+    "react": "^18",
+    "react-dom": "^18",
+    "typescript": "^5"
+  }
+}

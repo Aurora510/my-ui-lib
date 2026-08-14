@@ -1,0 +1,43 @@
+{
+  "name": "@my-ui-kit/components",
+  "version": "1.0.0",
+  "description": "My UI Kit - React 组件库",
+  "keywords": ["react", "components", "ui", "design-system"],
+  "sideEffects": ["**/*.css", "**/*.less"],
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js",
+      "types": "./esm/index.d.ts"
+    }
+  },
+  "files": ["esm", "cjs"],
+  "scripts": {
+    "build": "father build",
+    "dev": "father dev",
+    "test": "vitest run",
+    "lint": "eslint src"
+  },
+  "peerDependencies": {
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
+  },
+  "dependencies": {
+    "@my-ui-kit/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "father": "^4",
+    "jsdom": "^25",
+    "less": "^4",
+    "react": "^18",
+    "react-dom": "^18",
+    "typescript": "^5",
+    "vitest": "^2"
+  }
+}

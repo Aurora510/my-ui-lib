@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@my-ui-kit/utils": ["../utils/src"],
+      "@my-ui-kit/theme": ["../theme/src"]
+    }
+  },
+  "include": ["src", "**/*.test.tsx", "vitest.config.ts"]
+}
