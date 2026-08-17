@@ -1,7 +1,6 @@
 import type { ButtonHTMLAttributes } from 'react';
 import { cn } from '@my-ui-kit/utils';
 import './button.less';
-debugger;
 
 export interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
