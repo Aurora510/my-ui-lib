@@ -16,6 +16,12 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
+# GITHUB_TOKEN 需要写权限，才能推送 changeset-release/main 分支并创建版本 PR
+permissions:
+  contents: write
+  pull-requests: write
+
+
 jobs:
   release:
     name: Version & Publish
