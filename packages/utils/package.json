@@ -1,6 +1,6 @@
 {
   "name": "@my-ui-kit/utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "My UI Kit - 通用工具函数",
   "main": "cjs/index.js",
   "module": "esm/index.js",
@@ -12,7 +12,10 @@
       "types": "./esm/index.d.ts"
     }
   },
-  "files": ["esm", "cjs"],
+  "files": [
+    "esm",
+    "cjs"
+  ],
   "scripts": {
     "build": "father build",
     "dev": "father dev",
