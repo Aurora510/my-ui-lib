@@ -1,9 +1,17 @@
 {
   "name": "@my-ui-kit/components",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "My UI Kit - React 组件库",
-  "keywords": ["react", "components", "ui", "design-system"],
-  "sideEffects": ["**/*.css", "**/*.less"],
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "design-system"
+  ],
+  "sideEffects": [
+    "**/*.css",
+    "**/*.less"
+  ],
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "esm/index.d.ts",
@@ -14,7 +22,10 @@
       "types": "./esm/index.d.ts"
     }
   },
-  "files": ["esm", "cjs"],
+  "files": [
+    "esm",
+    "cjs"
+  ],
   "scripts": {
     "build": "father build",
     "dev": "father dev",
