@@ -1,4 +1,61 @@
-name: release.yml
+# 持续发布 (CD)：main 分支合入后自动 创建版本 PR → 合并后发布 npm
+#
+# ⚠️ 当前为「已写好、默认不触发」状态：
+#   - 未配置 NPM_TOKEN 时，流水线只会在 main 上自动创建「版本 PR」（升级版本号 + 生成 CHANGELOG），不会发布到 npm；
+#   - 想要真正发布，只需在仓库 Settings → Secrets and variables → Actions 中添加 NPM_TOKEN（在 npm 官方站点生成）。
+#   - 发布目标是私有源时，需同时修改各包 package.json 的 publishConfig.registry。
+#   - 文档站部署：后续需要时在下方追加 deploy job（GitHub Pages / Vercel 均可）。
+name: Release
+
 on:
+  push:
+    branches: [main]
+
+# 防止并发发布导致版本号冲突，同分支上的发布任务排队执行
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
+  release:
+    name: Version & Publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 有无 NPM_TOKEN 决定 publish 是否执行：
+      #   enabled=true  → publish 参数为 "pnpm release"（build + changeset publish）
+      #   enabled=false → publish 参数为空，只创建版本 PR
+      - name: Check publish flag
+        id: publish_flag
+        run: |
+          if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create Release Pull Request or Publish to npm
+        uses: changesets/action@v1
+        with:
+          version: pnpm version-packages
+          publish: ${{ steps.publish_flag.outputs.enabled == 'true' && 'pnpm release' || '' }}
+          commit: 'chore: version packages'
+          title: 'chore: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
