@@ -47,7 +47,7 @@ jobs:
       # PR 必须带 changeset：防止功能合入 main 却忘记记录版本变更
       # 如确无需发版，可给 PR 打上 skip-changeset 标签豁免
       - name: Require changeset
-        if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'skip-changeset')
+        if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'skip-changeset') && github.head_ref != 'changeset-release/main'
         run: |
           COUNT=$(ls .changeset/*.md 2>/dev/null | grep -vE '(README|config)' | wc -l)
           if [ "$COUNT" -eq 0 ]; then
